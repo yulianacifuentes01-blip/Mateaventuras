@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mateaventuras: la gran misión matemática</title>
+<style>
+:root{--navy:#243b75;--blue:#596fc1;--gold:#f2c14e;--ink:#25304b;--muted:#68738b;--paper:#f6f8ff;--white:#fff;--green:#21885b}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(145deg,#edf2ff,#fff7e6);color:var(--ink);min-height:100vh;padding:18px}
+main{max-width:760px;margin:0 auto}.hero{background:linear-gradient(130deg,var(--navy),var(--blue));color:white;border-radius:24px;padding:24px;text-align:center;box-shadow:0 10px 28px #263c7625}.hero .art{font-size:48px}.hero h1{font-size:clamp(25px,6vw,38px);margin:4px 0}.hero p{margin:6px 0 0}.panel{background:white;border:1px solid #e1e6f2;border-radius:19px;padding:18px;margin-top:15px;box-shadow:0 5px 18px #263c760c}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.muted{color:var(--muted);font-size:.9rem}.age,.world,.choice,.btn{font:inherit;cursor:pointer;border-radius:14px;border:2px solid #dce3f1;background:white;color:var(--ink);padding:12px}.age[aria-pressed=true]{border-color:var(--gold);background:#fff9e8}.world{display:flex;align-items:center;gap:13px;width:100%;text-align:left;margin-top:9px;padding:13px}.world .emoji{font-size:36px}.world small{display:block;color:var(--muted);margin-top:3px}.world:disabled{opacity:.45;cursor:not-allowed}.btn{background:var(--navy);color:white;border-color:var(--navy);font-weight:700;padding:12px 19px}.btn:disabled{opacity:.45}.choice{font-size:22px;font-weight:750;min-width:65px}.choice:disabled{cursor:default}.choices{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px}.question{background:#f5f7ff;border-radius:17px;padding:20px;text-align:center;margin-top:13px}.visual{font-size:35px;line-height:1.8;margin:15px auto;overflow-wrap:anywhere}.progress{height:9px;border-radius:20px;background:#e6eaf4;overflow:hidden;margin:12px 0}.progress div{height:100%;width:0;background:var(--gold);transition:width .25s}.feedback{min-height:48px;text-align:center;font-weight:700;padding:12px 3px}.hidden{display:none!important}.center{text-align:center}.big{font-size:65px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:480px){body{padding:10px}.panel{padding:14px}.hero{padding:18px}.world .emoji{font-size:30px}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero"><div class="art">🚀 🧭 ⭐</div><h1>MATEAVENTURAS</h1><strong>¡La gran misión matemática!</strong><p>Explora, juega y consigue las estrellas del conocimiento.</p></header>
+<section id="welcome" class="panel">
+ <h2>¡Hola, explorador o exploradora!</h2>
+ <p class="muted">Elige tu grupo de edad para adaptar los desafíos.</p>
+ <div class="row" style="justify-content:flex-start">
+  <button class="age" data-age="4-5" aria-pressed="true">4 a 5 años</button>
+  <button class="age" data-age="6-8" aria-pressed="false">6 a 8 años</button>
+ </div>
+ <div class="row" style="margin-top:20px"><h3>Elige tu primera aventura</h3><strong id="totalStars">⭐ 0 estrellas</strong></div>
+ <div id="worlds">
+  <button class="world" data-world="0"><span class="emoji">🌳</span><span><b>1. La selva de los números</b><small>Conteo y reconocimiento numérico</small></span><span class="world-status" style="margin-left:auto">▶</span></button>
+  <button class="world" data-world="1" disabled><span class="emoji">🔺</span><span><b>2. El planeta de las figuras</b><small>Formas y clasificación</small></span><span class="world-status" style="margin-left:auto">🔒</span></button>
+  <button class="world" data-world="2" disabled><span class="emoji">🛍️</span><span><b>3. La tienda matemática</b><small>Sumas y restas</small></span><span class="world-status" style="margin-left:auto">🔒</span></button>
+  <button class="world" data-world="3" disabled><span class="emoji">🧩</span><span><b>4. El laboratorio de patrones</b><small>Secuencias y pensamiento lógico</small></span><span class="world-status" style="margin-left:auto">🔒</span></button>
+ </div>
+ <p class="muted center">Cada mundo tiene cinco retos. ¡Completa las misiones para desbloquear nuevas aventuras!</p>
+</section>
+<section id="play" class="panel hidden">
+ <div class="row"><button id="back" class="age">← Mundos</button><b id="worldName"></b><strong id="starCount">⭐ 0</strong></div>
+ <div class="progress"><div id="bar"></div></div>
+ <div class="row muted"><span id="step">Reto 1 de 5</span><span id="ageLabel"></span></div>
+ <div class="question"><div id="character" class="big">🧭</div><h2 id="prompt">¡Vamos a explorar!</h2><div id="visual" class="visual"></div><div id="choices" class="choices"></div></div>
+ <div id="feedback" class="feedback" aria-live="polite">Selecciona una respuesta.</div>
+ <div class="center"><button id="next" class="btn hidden">Siguiente reto →</button></div>
+</section>
+<section id="finish" class="panel hidden center">
+ <div class="big">🏆</div><h2>¡Misión cumplida!</h2><p id="finishText"></p>
+ <div class="question"><div id="finishStars" class="big" style="font-size:38px">⭐⭐⭐⭐⭐</div><h3 id="finishScore"></h3><p class="muted">¡Cada reto es una oportunidad para aprender!</p></div>
+ <button id="again" class="btn">Volver a jugar</button> <button id="home" class="age">Regresar a los mundos</button>
+</section>
+<div class="footer">Mateaventuras · Aprender jugando es una gran aventura 🌈</div>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);let age='4-5',world=0,step=0,score=0,unlocked=0,stars=[0,0,0,0],current=null,answered=false;
+const names=['La selva de los números','El planeta de las figuras','La tienda matemática','El laboratorio de patrones'],icons=['🌳','🔺','🛍️','🧩'];
+const animals=['🐒','🦁','🐘','🦋','🐸','🦜'],shapes=['🔴','🟦','🔺','🟩'],shapeNames=['círculo','cuadrado','triángulo','rectángulo'];
+const patterns=[['🔴','🔵','🔴','🔵','🔴','🔵'],['⭐','🌙','⭐','🌙','⭐','🌙'],['🟩','🟨','🟩','🟨','🟩','🟨']];
+const rand=n=>Math.floor(Math.random()*n),shuffle=a=>[...a].sort(()=>Math.random()-.5);
+function show(id){['welcome','play','finish'].forEach(x=>$(x).classList.toggle('hidden',x!==id))}
+function updateHome(){$('totalStars').textContent='⭐ '+stars.reduce((a,b)=>a+b,0)+' estrellas';document.querySelectorAll('[data-world]').forEach((b,i)=>{b.disabled=i>unlocked;b.querySelector('.world-status').textContent=i<=unlocked?(stars[i]?'⭐ '+stars[i]+'/5':'▶'):'🔒'})}
+document.querySelectorAll('[data-age]').forEach(b=>b.addEventListener('click',()=>{age=b.dataset.age;document.querySelectorAll('[data-age]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))}));
+document.querySelectorAll('[data-world]').forEach(b=>b.addEventListener('click',()=>{if(!b.disabled)start(+b.dataset.world)}));
+function makeQuestion(){let q={},max=age==='4-5'?5:10;
+if(world===0){let n=1+rand(max);if(age==='6-8'&&rand(2))n=11+rand(10);q={prompt:'¿Cuántos animalitos hay en la selva?',visual:Array.from({length:n},()=>animals[rand(animals.length)]).join(' '),answer:String(n),choices:shuffle([n,n+1,Math.max(1,n-1),n+2].map(String))}}
+else if(world===1){let i=rand(4);q={prompt:'¿Cómo se llama esta figura geométrica?',visual:shapes[i],answer:shapeNames[i],choices:shuffle([...shapeNames])}}
+else if(world===2){let a=1+rand(max),b=1+rand(max),sub=age==='6-8'&&rand(2)===1;if(sub&&b>a)[a,b]=[b,a];let ans=sub?a-b:a+b;q={prompt:sub?`Había ${a} manzanas y se comieron ${b}. ¿Cuántas quedan?`:`Tenemos ${a} manzanas y conseguimos ${b} más. ¿Cuántas hay ahora?`,visual:'🍎 '.repeat(a)+(sub?' − ':' + ')+'🍎 '.repeat(b),answer:String(ans),choices:shuffle([ans,ans+1,Math.max(0,ans-1),a+b+2].map(String))}}
+else{let p=patterns[rand(3)];q={prompt:'¡Observa el patrón! ¿Qué figura continúa la secuencia?',visual:p.slice(0,5).join(' ')+' ❓',answer:p[5],choices:shuffle(['🔴','🔵','⭐','🌙','🟩','🟨'])}}
+return q}
+function start(w){world=w;step=0;score=0;show('play');$('worldName').textContent=icons[w]+' '+names[w];$('starCount').textContent='⭐ '+stars.reduce((a,b)=>a+b,0);$('ageLabel').textContent=age+' años';render()}
+function render(){answered=false;current=makeQuestion();$('step').textContent=`Reto ${step+1} de 5`;$('bar').style.width=(step*20)+'%';$('prompt').textContent=current.prompt;$('visual').textContent=current.visual;$('choices').innerHTML='';$('feedback').textContent='¡Tú puedes! Elige una respuesta.';$('feedback').style.color='';$('next').classList.add('hidden');$('character').textContent=['🧭','🦊','🚀','🧙'][world];current.choices.forEach(c=>{let b=document.createElement('button');b.className='choice';b.textContent=c;b.addEventListener('click',()=>check(c,b));$('choices').appendChild(b)})}
+function check(c,b){if(answered)return;answered=true;let ok=String(c)===String(current.answer);if(ok){score++;$('feedback').textContent='¡Excelente! ¡Respuesta correcta! 🌟';$('feedback').style.color='#21885b';b.style.borderColor='#21885b'}else{$('feedback').textContent='¡Buen intento! La respuesta correcta es '+current.answer+'. ¡Sigamos aprendiendo! 💛';$('feedback').style.color='#b47b13';b.style.borderColor='#b47b13'}document.querySelectorAll('#choices button').forEach(x=>x.disabled=true);$('bar').style.width=((step+1)*20)+'%';$('next').textContent=step===4?'Ver resultado 🏆':'Siguiente reto →';$('next').classList.remove('hidden')}
+$('next').addEventListener('click',()=>{if(!answered)return;if(step<4){step++;render()}else finish()});
+function finish(){stars[world]=Math.max(stars[world],score);if(world===unlocked&&unlocked<3)unlocked++;updateHome();show('finish');$('finishText').textContent=score===5?'¡Lo lograste! Respondiste todos los retos correctamente.':'¡Terminaste esta aventura! Sigue practicando para descubrir nuevas cosas.';$('finishStars').textContent='⭐'.repeat(score)+'☆'.repeat(5-score);$('finishScore').textContent=score+' de 5 respuestas correctas'}
+$('back').addEventListener('click',()=>{show('welcome');updateHome()});$('home').addEventListener('click',()=>{show('welcome');updateHome()});$('again').addEventListener('click',()=>start(world));updateHome();
+})();
+</script>
+</body></html>
